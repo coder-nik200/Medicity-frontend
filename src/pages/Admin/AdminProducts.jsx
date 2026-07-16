@@ -149,8 +149,13 @@ const AdminProducts = () => {
               <div className="flex gap-3">
                 {p.image && (
                   <img
-                    src={`https://medicity-backend.vercel.app/${p.image}`}
+                    src={
+                      p.image?.startsWith("http")
+                        ? p.image
+                        : `https://medicity-backend.vercel.app/${p.image}`
+                    }
                     className="w-14 h-14 rounded-xl object-cover"
+                    alt={p.name}
                   />
                 )}
                 <div>
