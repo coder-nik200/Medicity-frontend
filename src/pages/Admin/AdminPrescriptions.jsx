@@ -111,12 +111,16 @@ const AdminPrescriptions = () => {
             <p className="text-sm font-medium">{p.medicine?.name}</p>
 
             {p.fileUrl && (
-              <a
-                href={`https://medicity-backend.vercel.app/${p.fileUrl}`}
-                target="_blank"
-                rel="noreferrer"
-                className="text-sky-600 text-sm underline"
-              >
+                <a
+                  href={
+                    p.fileUrl?.startsWith("http")
+                      ? p.fileUrl
+                      : `https://medicity-backend.vercel.app${p.fileUrl}`
+                  }
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-sky-600 text-sm underline"
+                >
                 View Prescription
               </a>
             )}
