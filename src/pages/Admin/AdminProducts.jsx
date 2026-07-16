@@ -149,7 +149,7 @@ const AdminProducts = () => {
               <div className="flex gap-3">
                 {p.image && (
                   <img
-                    src={`http://localhost:5001${p.image}`}
+                    src={`https://medicity-backend.vercel.app/${p.image}`}
                     className="w-14 h-14 rounded-xl object-cover"
                   />
                 )}
