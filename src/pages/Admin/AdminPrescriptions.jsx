@@ -112,7 +112,7 @@ const AdminPrescriptions = () => {
 
             {p.fileUrl && (
               <a
-                href={`http://localhost:5001${p.fileUrl}`}
+                href={`https://medicity-backend.vercel.app/${p.fileUrl}`}
                 target="_blank"
                 rel="noreferrer"
                 className="text-sky-600 text-sm underline"
