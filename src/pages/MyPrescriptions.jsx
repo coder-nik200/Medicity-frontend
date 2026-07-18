@@ -47,8 +47,7 @@ const MyPrescriptions = () => {
       incrementCart(1);
     } catch (error) {
       toast.error(
-        error.response?.data?.message ||
-          "Cannot add medicine to cart"
+        error.response?.data?.message || "Cannot add medicine to cart",
       );
     }
   };
@@ -56,7 +55,7 @@ const MyPrescriptions = () => {
   /* ================= DELETE ================= */
   const handleDeletePrescription = async (id) => {
     const confirmDelete = window.confirm(
-      "Are you sure you want to delete this prescription?"
+      "Are you sure you want to delete this prescription?",
     );
 
     if (!confirmDelete) return;
@@ -67,8 +66,7 @@ const MyPrescriptions = () => {
       fetchMyPrescriptions();
     } catch (error) {
       toast.error(
-        error.response?.data?.message ||
-          "Failed to delete prescription"
+        error.response?.data?.message || "Failed to delete prescription",
       );
     }
   };
@@ -76,8 +74,12 @@ const MyPrescriptions = () => {
   /* ================= LOADING ================= */
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-sky-700">
-        Loading prescriptions...
+      <div className="flex min-h-screen items-center justify-center bg-sky-50">
+        <div className="text-center">
+          <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-sky-200 border-t-sky-600"></div>
+
+          <p className="font-medium text-sky-700">Loading prescriptions...</p>
+        </div>
       </div>
     );
   }
@@ -113,9 +115,7 @@ const MyPrescriptions = () => {
                     <p className="font-semibold text-sky-900">
                       {p.medicine?.name}
                     </p>
-                    <p className="text-sm text-sky-700">
-                      ₹{p.medicine?.price}
-                    </p>
+                    <p className="text-sm text-sky-700">₹{p.medicine?.price}</p>
                   </div>
                 </div>
 
@@ -129,9 +129,7 @@ const MyPrescriptions = () => {
                       </span>
 
                       <button
-                        onClick={() =>
-                          handleDeletePrescription(p._id)
-                        }
+                        onClick={() => handleDeletePrescription(p._id)}
                         className="flex items-center gap-1 text-red-600 border border-red-200 px-3 py-2 rounded-xl text-sm hover:bg-red-50"
                       >
                         <Trash2 size={16} />
@@ -148,9 +146,7 @@ const MyPrescriptions = () => {
                       </span>
 
                       <button
-                        onClick={() =>
-                          handleAddToCart(p.medicine._id)
-                        }
+                        onClick={() => handleAddToCart(p.medicine._id)}
                         className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-sm font-semibold"
                       >
                         <ShoppingCart size={16} />
@@ -169,19 +165,15 @@ const MyPrescriptions = () => {
                       {/* ✅ ADMIN COMMENT */}
                       {p.adminComment && (
                         <div className="w-full sm:max-w-md bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-2 rounded-xl">
-                          <p className="font-semibold">
-                            Admin message:
-                          </p>
-                          <p className="italic break-words">
-                            {p.adminComment}
-                          </p>
+                          <p className="font-semibold">Admin message:</p>
+                          <p className="italic break-words">{p.adminComment}</p>
                         </div>
                       )}
 
                       <button
                         onClick={() =>
                           navigate(
-                            `/upload-prescription?medicineId=${p.medicine._id}`
+                            `/upload-prescription?medicineId=${p.medicine._id}`,
                           )
                         }
                         className="flex items-center gap-2 bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded-xl text-sm font-semibold"
@@ -191,9 +183,7 @@ const MyPrescriptions = () => {
                       </button>
 
                       <button
-                        onClick={() =>
-                          handleDeletePrescription(p._id)
-                        }
+                        onClick={() => handleDeletePrescription(p._id)}
                         className="flex items-center gap-1 text-red-600 border border-red-200 px-3 py-2 rounded-xl text-sm hover:bg-red-50"
                       >
                         <Trash2 size={16} />

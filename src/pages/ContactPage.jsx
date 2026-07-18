@@ -3,11 +3,13 @@ import { MapPin, Phone, Mail } from "lucide-react";
 
 const ContactPage = () => {
   return (
-    <div className="min-h-screen bg-sky-50 py-10 px-4">
-      <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8">
+    <div className="min-h-screen bg-sky-50 py-6 px-4 sm:py-10">
+      <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-6 sm:gap-8">
         {/* Contact Form */}
-        <div className="bg-white rounded-3xl shadow-md border border-sky-100 p-8">
-          <h1 className="text-3xl font-bold text-sky-900 mb-3">Contact Us</h1>
+        <div className="bg-white rounded-3xl shadow-md border border-sky-100 p-5 sm:p-8">
+          <h1 className="text-2xl font-bold text-sky-900 mb-3 sm:text-3xl">
+            Contact Us
+          </h1>
           <p className="text-sm text-sky-700 mb-6">
             Questions about orders, prescriptions or payments? Our support team
             is available 24/7.
@@ -39,7 +41,7 @@ const ContactPage = () => {
                 Message
               </label>
               <textarea
-                className="w-full min-h-[120px] px-4 py-3 border rounded-2xl focus:ring-2 focus:ring-sky-400 outline-none text-sm"
+                className="w-full resize-none min-h-[120px] px-4 py-3 border rounded-2xl focus:ring-2 focus:ring-sky-400 outline-none text-sm"
                 placeholder="Write your message here..."
               />
             </div>
@@ -51,21 +53,26 @@ const ContactPage = () => {
 
         {/* Contact Info */}
         <div className="space-y-6">
-          <div className="bg-white rounded-3xl shadow-md border border-sky-100 p-6 hover:shadow-lg transition">
-            <h2 className="text-xl font-semibold text-sky-900 mb-4">
+          <div className="bg-white rounded-3xl shadow-md border border-sky-100 p-5 sm:p-6 hover:shadow-lg transition">
+            <h2 className="text-lg font-semibold text-sky-900 mb-4 sm:text-xl">
               Pharmacy Address
             </h2>
-            <div className="flex items-center gap-2 mb-2">
-              <MapPin className="text-emerald-600" size={18} />
-              <p>Medicity Online Pharmacy, Connaught Place, Amritsar, India</p>
+            <div className="flex items-start gap-2 mb-2">
+              <MapPin
+                className="text-emerald-600 flex-shrink-0 mt-0.5"
+                size={18}
+              />
+              <p className="break-words">
+                Medicity Online Pharmacy, Batala Road, Amritsar, India
+              </p>
             </div>
             <div className="flex items-center gap-2 mb-1">
-              <Phone className="text-emerald-600" size={18} />
-              <p>+91 98765 43210</p>
+              <Phone className="text-emerald-600 flex-shrink-0" size={18} />
+              <p>+91 99882 61955</p>
             </div>
             <div className="flex items-center gap-2">
-              <Mail className="text-emerald-600" size={18} />
-              <p>support@medicity.health</p>
+              <Mail className="text-emerald-600 flex-shrink-0" size={18} />
+              <p className="break-words">codesnippet17@gmail.com</p>
             </div>
           </div>
 
@@ -75,10 +82,9 @@ const ContactPage = () => {
             </h2>
             <p className="text-xs text-emerald-800">
               For urgent medicine delivery or order modifications, call our 24/7
-              helpline at{" "}
-              <span className="font-semibold">+91 8000 123 123</span>. In case
-              of medical emergencies, please contact your nearest hospital
-              immediately.
+              helpline at <span className="font-semibold">+91 9988261955</span>.
+              In case of medical emergencies, please contact your nearest
+              hospital immediately.
             </p>
           </div>
 

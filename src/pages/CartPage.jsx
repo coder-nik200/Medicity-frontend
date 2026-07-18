@@ -10,11 +10,10 @@ const CartPage = () => {
 
   const navigate = useNavigate();
 
-  const handleNavigate = () => {
-    navigate("/products");
+  const handleNavigate = (productId) => {
+    navigate(`/products/${productId}`);
   };
 
-  // Fetch cart from backend
   const fetchCart = async () => {
     try {
       const res = await api.get("/cart");
@@ -30,7 +29,6 @@ const CartPage = () => {
     fetchCart();
   }, []);
 
-  // Increment / Decrement Quantity
   const incrementQty = async (productId) => {
     try {
       const res = await api.post("/cart/update", {
@@ -55,7 +53,6 @@ const CartPage = () => {
     }
   };
 
-  // Remove item
   const removeItem = async (productId) => {
     try {
       const res = await api.post("/cart/remove", { productId });
@@ -66,14 +63,14 @@ const CartPage = () => {
     }
   };
 
-  if (loading)
+  if (loading) {
     return (
-      <div className="h-screen flex items-center justify-center text-sky-700 text-lg">
+      <div className="flex min-h-screen items-center justify-center px-4 text-lg font-semibold text-sky-700">
         Loading cart...
       </div>
     );
+  }
 
-  // Calculate totals
   const itemsTotal = cart.reduce(
     (sum, item) => sum + item.quantity * item.product.price,
     0,
@@ -87,70 +84,68 @@ const CartPage = () => {
   const grandTotal = itemsTotal + gstTotal;
 
   return (
-    <div className="min-h-screen bg-sky-50 py-10 px-4">
-      <div className="max-w-5xl mx-auto grid lg:grid-cols-[2fr,1fr] gap-8">
-        {/* CART ITEMS */}
+    <div className="min-h-screen bg-sky-50 px-3 py-6 sm:px-6 lg:px-8 lg:py-8">
+      <div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-[1.25fr_0.75fr]">
         <div>
-          <h1 className="text-2xl font-bold text-sky-900 mb-4">Your Cart</h1>
+          <h1 className="mb-4 text-2xl font-bold text-sky-900 sm:text-3xl">
+            Your Cart
+          </h1>
           {cart.length === 0 ? (
-            <p className="text-sky-700 text-sm">
+            <div className="rounded-3xl border border-slate-200 bg-white p-8 text-center text-sm text-slate-600 shadow-sm">
               Your cart is empty. Start adding medicines to continue.
-            </p>
+            </div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-3">
               {cart.map((item) => (
                 <div
                   key={item._id}
-                  className="bg-white rounded-2xl border border-sky-100 shadow-sm p-4 flex items-center gap-4 "
+                  className="flex flex-col gap-3 rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:gap-4"
                 >
-                  {/* IMAGE */}
-                  <div className="w-20 h-20 flex-shrink-0">
+                  <div className="flex-shrink-0">
                     <img
                       src={item.product.image}
                       alt={item.product.name}
-                      onClick={handleNavigate}
-                      className="w-full h-full object-contain rounded-xl cursor-pointer"
-                      onError={(e) =>
-                        (e.target.src =
-                          "https://via.placeholder.com/100?text=No+Image")
-                      }
+                      onClick={() => handleNavigate(item.product._id)}
+                      className="h-20 w-20 cursor-pointer rounded-2xl object-contain transition hover:scale-105 sm:h-24 sm:w-24"
+                      onError={(e) => {
+                        e.target.src =
+                          "https://via.placeholder.com/100?text=No+Image";
+                      }}
                     />
                   </div>
 
-                  {/* PRODUCT DETAILS */}
                   <div className="flex-1">
-                    <p className="text-sm font-semibold text-sky-900">
+                    <p className="text-sm font-semibold text-slate-900">
                       {item.product.name}
                     </p>
-                    <p className="text-xs text-sky-600 mt-1">
+                    <p className="mt-1 text-xs text-slate-600">
                       ₹{item.product.price} per unit
                     </p>
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="mt-1 text-xs text-slate-500">
                       GST: {item.product.gstPercentage}%
                     </p>
                   </div>
 
-                  {/* QUANTITY + TOTAL */}
-                  <div className="flex flex-col items-end gap-2">
-                    <div className="flex items-center border border-sky-200 rounded-xl overflow-hidden">
+                  <div className="flex flex-wrap items-center justify-between gap-3 sm:flex-col sm:items-end">
+                    <div className="flex overflow-hidden rounded-2xl border border-slate-200">
                       <button
                         onClick={() => decrementQty(item.product._id)}
                         disabled={item.quantity === 1}
-                        className="px-2 py-1 text-sky-700 text-sm hover:bg-sky-50 disabled:opacity-50"
+                        className="min-h-11 px-3 text-slate-700 disabled:opacity-50"
                       >
-                        -
+                        −
                       </button>
-                      <span className="px-3 text-sm text-sky-900">
+                      <span className="flex min-w-10 items-center justify-center bg-slate-50 px-3 text-sm font-semibold text-slate-800">
                         {item.quantity}
                       </span>
                       <button
                         onClick={() => incrementQty(item.product._id)}
-                        className="px-2 py-1 text-sky-700 text-sm hover:bg-sky-50"
+                        className="min-h-11 px-3 text-slate-700"
                       >
                         +
                       </button>
                     </div>
-                    <p className="text-sm font-semibold text-sky-900">
+                    <p className="text-sm font-semibold text-slate-900">
                       ₹
                       {(
                         item.quantity *
@@ -160,7 +155,7 @@ const CartPage = () => {
                     </p>
                     <button
                       onClick={() => removeItem(item.product._id)}
-                      className="text-sky-500 hover:text-red-500"
+                      className="text-sky-600 transition hover:text-red-500"
                     >
                       <Trash2 size={18} />
                     </button>
@@ -171,12 +166,11 @@ const CartPage = () => {
           )}
         </div>
 
-        {/* SUMMARY */}
-        <aside className="bg-white rounded-2xl border border-sky-100 shadow-md p-5 h-fit">
-          <h2 className="text-lg font-semibold text-sky-900 mb-4">
+        <aside className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm lg:sticky lg:top-24 lg:h-fit">
+          <h2 className="text-lg font-semibold text-slate-900">
             Order Summary
           </h2>
-          <div className="space-y-2 text-sm text-sky-800 mb-4">
+          <div className="mt-4 space-y-2 text-sm text-slate-700">
             <div className="flex justify-between">
               <span>Items Total</span>
               <span>₹{itemsTotal.toFixed(2)}</span>
@@ -187,14 +181,14 @@ const CartPage = () => {
             </div>
             <div className="flex justify-between">
               <span>Delivery</span>
-              <span className="text-emerald-600 font-semibold">Free</span>
+              <span className="font-semibold text-emerald-600">Free</span>
             </div>
           </div>
-          <div className="flex justify-between items-center mb-4">
-            <span className="text-sm font-semibold text-sky-900">
+          <div className="mt-4 flex items-center justify-between border-t border-slate-200 pt-4">
+            <span className="text-sm font-semibold text-slate-900">
               Grand Total
             </span>
-            <span className="text-xl font-bold text-sky-900">
+            <span className="text-xl font-bold text-slate-900">
               ₹{grandTotal.toFixed(2)}
             </span>
           </div>
@@ -202,12 +196,12 @@ const CartPage = () => {
           {cart.length > 0 && (
             <button
               onClick={() => navigate("/checkout")}
-              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl text-sm font-semibold shadow-sm transition"
+              className="mt-5 flex min-h-11 w-full items-center justify-center rounded-2xl bg-emerald-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-emerald-700"
             >
               Proceed to Payment
             </button>
           )}
-          <p className="text-[11px] text-sky-600 mt-2">
+          <p className="mt-3 text-[11px] leading-relaxed text-slate-500">
             Payments are securely processed via Stripe. Your card details are
             never stored.
           </p>

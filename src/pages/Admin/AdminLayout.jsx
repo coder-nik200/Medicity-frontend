@@ -36,11 +36,7 @@ const AdminLayout = () => {
       end
       onClick={() => setOpen(false)}
       className={({ isActive }) =>
-        `admin-link flex items-center gap-3 px-3 py-2 rounded-lg ${
-          isActive
-            ? "bg-slate-800 text-white"
-            : "text-slate-300 hover:bg-slate-800"
-        }`
+        `admin-link flex items-center gap-3 rounded-xl px-3 py-2.5 ${isActive ? "bg-slate-800 text-white" : "text-slate-300 hover:bg-slate-800"}`
       }
     >
       <Icon size={18} />
@@ -49,70 +45,40 @@ const AdminLayout = () => {
   );
 
   return (
-    <div className="h-screen flex bg-gray-100 overflow-hidden">
-      {/* ================= MOBILE OVERLAY ================= */}
-      {open && (
-        <div
-          onClick={() => setOpen(false)}
-          className="fixed inset-0 bg-black/40 z-20 lg:hidden"
-        />
-      )}
+    <div className="flex h-screen overflow-hidden bg-slate-100">
+      {open && <div onClick={() => setOpen(false)} className="fixed inset-0 z-20 bg-black/40 lg:hidden" />}
 
-      {/* ================= SIDEBAR ================= */}
-      <aside
-        className={`fixed inset-y-0 left-0 z-30 w-64 bg-slate-900 text-white flex flex-col
-        transform transition-transform duration-300
-        ${open ? "translate-x-0" : "-translate-x-full"}
-        lg:translate-x-0`}
-      >
-        {/* Logo */}
-        <div className="h-16 flex items-center justify-between px-6 text-xl font-bold border-b border-slate-700">
+      <aside className={`fixed inset-y-0 left-0 z-30 flex w-72 flex-col bg-slate-900 text-white transition-transform duration-300 ${open ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}>
+        <div className="flex h-16 items-center justify-between border-b border-slate-700 px-5 text-lg font-semibold">
           Medicity Admin
           <button onClick={() => setOpen(false)} className="lg:hidden">
-            <X />
+            <X size={18} />
           </button>
         </div>
 
-        {/* Nav */}
-        <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
+        <nav className="flex-1 space-y-2 overflow-y-auto p-4">
           <NavItem to="/admin" icon={LayoutDashboard} label="Dashboard" />
           <NavItem to="/admin/products" icon={Package} label="Products" />
           <NavItem to="/admin/orders" icon={ShoppingBag} label="Orders" />
-          <NavItem
-            to="/admin/prescriptions"
-            icon={FileText}
-            label="Prescriptions"
-          />
+          <NavItem to="/admin/prescriptions" icon={FileText} label="Prescriptions" />
           <NavItem to="/admin/users" icon={Users} label="Users" />
         </nav>
 
-        {/* Logout */}
-        <button
-          onClick={handleLogout}
-          className="h-16 flex items-center gap-3 px-6 text-red-400 hover:bg-slate-800 border-t border-slate-700"
-        >
+        <button onClick={handleLogout} className="flex h-16 items-center gap-3 border-t border-slate-700 px-5 text-left text-red-400 transition hover:bg-slate-800">
           <LogOut size={18} />
           Logout
         </button>
       </aside>
 
-      {/* ================= MAIN ================= */}
-      <div className="flex-1 flex flex-col lg:ml-64">
-        {/* Header */}
-        <header className="h-16 bg-white border-b flex items-center justify-between px-4 lg:px-8 shadow-sm fixed top-0 left-0 right-0 lg:left-64 z-10">
-          <button
-            onClick={() => setOpen(true)}
-            className="lg:hidden text-slate-700"
-          >
-            <Menu />
+      <div className="flex flex-1 flex-col lg:ml-72">
+        <header className="fixed left-0 right-0 top-0 z-10 flex h-16 items-center justify-between border-b border-slate-200 bg-white px-4 shadow-sm lg:left-72 lg:px-8">
+          <button onClick={() => setOpen(true)} className="rounded-full p-2 text-slate-700 lg:hidden">
+            <Menu size={20} />
           </button>
-          <span className="font-semibold text-slate-700">
-            Admin Panel
-          </span>
+          <span className="font-semibold text-slate-700">Admin Panel</span>
         </header>
 
-        {/* Content */}
-        <main className="flex-1 mt-16 overflow-y-auto p-4 sm:p-6 lg:p-8">
+        <main className="mt-16 flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
           <Outlet />
         </main>
       </div>

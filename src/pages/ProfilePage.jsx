@@ -30,21 +30,21 @@ const ProfilePage = () => {
   const handleSave = async () => {
     try {
       setLoading(true);
-       if(!formData)
-       {
-        return toast.error("Update Details Not Be Empty");
-       }
+      if (!formData.name.trim() || !formData.email.trim()) {
+        toast.error("Name and email are required");
+        return;
+      }
       // 🔗 BACKEND (enable later)
       const res = await api.put("/users/profile", formData);
       setUser(res.data.data);
       console.log(user);
-    //   // 🧪 TEMP: update locally
-    //   setUser({ ...user, ...formData });
+      //   // 🧪 TEMP: update locally
+      //   setUser({ ...user, ...formData });
 
       toast.success("Profile updated successfully");
       setIsEditing(false);
     } catch (error) {
-        console.error(error);
+      console.error(error);
       toast.error("Failed to update profile");
     } finally {
       setLoading(false);
@@ -52,13 +52,22 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-sky-50 px-4 py-10">
-      <div className="max-w-3xl mx-auto bg-white rounded-3xl shadow-lg p-6 sm:p-10">
-
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-emerald-50 px-4 py-8 sm:py-12">
+      <div className="mx-auto max-w-3xl rounded-3xl border border-sky-100 bg-white p-6 shadow-xl sm:p-10">
         {/* Header */}
+        <div className="mb-8 rounded-2xl bg-sky-50 p-5">
+          <h2 className="font-semibold text-sky-900">
+            Welcome back, {user?.name}
+          </h2>
+
+          <p className="mt-1 text-sm text-slate-600">
+            Keep your personal information updated for faster checkout and order
+            tracking.
+          </p>
+        </div>
         <div className="flex flex-col sm:flex-row items-center gap-6 mb-8">
-          <div className="w-20 h-20 rounded-full bg-sky-100 flex items-center justify-center text-sky-700">
-            <User size={36} />
+          <div className="flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-sky-600 to-emerald-500 text-white shadow-lg">
+            <User size={42} />
           </div>
           <div className="text-center sm:text-left">
             <h1 className="text-2xl sm:text-3xl font-bold text-sky-900">
@@ -72,7 +81,6 @@ const ProfilePage = () => {
 
         {/* Profile Content */}
         <div className="space-y-6">
-
           {/* Name */}
           <div className="flex items-start gap-4">
             <User className="text-sky-600 mt-1" />
@@ -84,7 +92,7 @@ const ProfilePage = () => {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full mt-1 px-4 py-2 rounded-xl border focus:ring-2 focus:ring-sky-400 outline-none"
+                  className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200"
                 />
               ) : (
                 <p className="font-semibold text-sky-900">
@@ -131,8 +139,7 @@ const ProfilePage = () => {
             {!isEditing ? (
               <button
                 onClick={() => setIsEditing(true)}
-                className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl 
-                bg-sky-600 text-white font-semibold hover:bg-sky-700 transition"
+                className="flex min-h-[48px] items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-sky-600 to-sky-500 px-6 font-semibold text-white shadow-md transition hover:from-sky-700 hover:to-sky-600"
               >
                 <Edit size={18} />
                 Edit Profile
@@ -142,12 +149,7 @@ const ProfilePage = () => {
                 <button
                   onClick={handleSave}
                   disabled={loading}
-                  className={`flex items-center justify-center gap-2 px-6 py-3 rounded-xl 
-                  text-white font-semibold transition ${
-                    loading
-                      ? "bg-gray-400 cursor-not-allowed"
-                      : "bg-emerald-600 hover:bg-emerald-700"
-                  }`}
+                  className="flex min-h-[48px] items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-600 to-emerald-500 px-6 font-semibold text-white shadow-md transition hover:from-emerald-700 hover:to-emerald-600"
                 >
                   <Save size={18} />
                   {loading ? "Saving..." : "Save Changes"}
@@ -155,8 +157,7 @@ const ProfilePage = () => {
 
                 <button
                   onClick={handleCancel}
-                  className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl 
-                  bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300 transition"
+                  className="flex min-h-[48px] items-center justify-center gap-2 rounded-2xl border border-slate-300 bg-white px-6 font-semibold text-slate-700 transition hover:bg-slate-50"
                 >
                   <X size={18} />
                   Cancel

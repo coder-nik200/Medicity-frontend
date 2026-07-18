@@ -49,12 +49,12 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-sky-50 to-emerald-50 px-4">
-      <div className="bg-white shadow-xl rounded-3xl p-10 w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-b from-sky-50 to-emerald-50 px-4 py-8">
+      <div className="bg-white shadow-xl rounded-3xl p-6 w-full max-w-md sm:p-10">
         {/* Header */}
         <div className="flex flex-col items-center mb-6">
           <span className="text-4xl mb-2">💊</span>
-          <h2 className="text-3xl font-extrabold text-sky-900">
+          <h2 className="text-2xl font-extrabold text-sky-900 text-center sm:text-3xl">
             Create Account
           </h2>
           <p className="text-sm text-sky-700 mt-1 text-center">
@@ -81,9 +81,7 @@ const SignupPage = () => {
 
           {/* EMAIL */}
           <div>
-            <label className="block mb-1 font-medium text-sky-900">
-              Email
-            </label>
+            <label className="block mb-1 font-medium text-sky-900">Email</label>
             <input
               type="email"
               name="email"
@@ -137,16 +135,10 @@ const SignupPage = () => {
               />
               <button
                 type="button"
-                onClick={() =>
-                  setShowConfirmPassword(!showConfirmPassword)
-                }
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500"
               >
-                {showConfirmPassword ? (
-                  <EyeOff size={16} />
-                ) : (
-                  <Eye size={16} />
-                )}
+                {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
           </div>

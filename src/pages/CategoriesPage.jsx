@@ -58,14 +58,16 @@ const CategoriesPage = () => {
             return (
               <div
                 key={cat.id}
-                onClick={() => navigate(`/category/${encodeURIComponent(cat.slug)}`)}
+                onClick={() =>
+                  navigate(`/category/${encodeURIComponent(cat.slug)}`)
+                }
                 className="cursor-pointer bg-white rounded-2xl border border-sky-100 
                 shadow-sm hover:shadow-md hover:-translate-y-1 
                 transition-all overflow-hidden"
               >
                 {/* Header */}
                 <div
-                  className={`h-24 bg-gradient-to-r ${cat.color} flex items-center px-5`}
+                  className={`h-24 bg-linear-to-r ${cat.color} flex items-center px-5`}
                 >
                   <div className="w-12 h-12 rounded-full bg-white/70 flex items-center justify-center shadow-sm mr-4">
                     <Icon className="text-sky-700" />
@@ -82,9 +84,7 @@ const CategoriesPage = () => {
 
                 {/* Body */}
                 <div className="p-5">
-                  <p className="text-sm text-sky-800 mb-4">
-                    {cat.description}
-                  </p>
+                  <p className="text-sm text-sky-800 mb-4">{cat.description}</p>
                   <span className="text-sm font-semibold text-sky-700 underline underline-offset-4">
                     View medicines →
                   </span>

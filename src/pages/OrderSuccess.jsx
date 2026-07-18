@@ -16,7 +16,7 @@ export default function OrderSuccess() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-gray-100 to-gray-200 px-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-linear-to-b from-gray-100 to-gray-200 px-4">
       {/* Tick Icon */}
       <div className="flex flex-col items-center bg-white p-10 rounded-3xl shadow-xl">
         <CheckCircle size={80} className="text-emerald-500 mb-6" />

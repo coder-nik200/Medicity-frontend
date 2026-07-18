@@ -1,11 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  ShoppingCart,
-  MoveLeftIcon,
-  MoveRightIcon,
-  FileText,
-} from "lucide-react";
+import { ShoppingCart, FileText } from "lucide-react";
 import api from "../api/axios";
 import toast from "react-hot-toast";
 import { useCart } from "../context/CartContext";
@@ -16,21 +11,16 @@ const FeaturedMedicines = () => {
   const [adding, setAdding] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const scrollRef = useRef(null);
   const navigate = useNavigate();
   const { incrementCart } = useCart();
 
-  /* =======================
-     FETCH PRODUCTS
-  ======================= */
   const fetchProducts = async () => {
-    const res = await api.get("/products", { params: { limit: 12, sort: "popular", inStock: true } });
+    const res = await api.get("/products", {
+      params: { limit: 12, sort: "popular", inStock: true },
+    });
     return res.data.data || [];
   };
 
-  /* =======================
-     FETCH MY PRESCRIPTIONS
-  ======================= */
   const fetchMyPrescriptions = async () => {
     try {
       const res = await api.get("/prescriptions/my");
@@ -40,60 +30,46 @@ const FeaturedMedicines = () => {
     }
   };
 
-useEffect(() => {
-  const loadData = async () => {
-    try {
-      setLoading(true);
-      const [productsData, prescriptionsData] = await Promise.all([
-        fetchProducts(),
-        fetchMyPrescriptions(),
-      ]);
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        const [productsData, prescriptionsData] = await Promise.all([
+          fetchProducts(),
+          fetchMyPrescriptions(),
+        ]);
 
-      // 🔥 SHOW ONLY ACTIVE PRODUCTS
-      setProducts(productsData.filter(p => p.isActive === true));
-      setMyPrescriptions(prescriptionsData);
-    } catch {
-      toast.error("Failed to load featured medicines");
-    } finally {
-      setLoading(false);
-    }
-  };
+        setProducts(productsData.filter((p) => p.isActive === true));
+        setMyPrescriptions(prescriptionsData);
+      } catch {
+        toast.error("Failed to load featured medicines");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  loadData();
-}, []);
+    loadData();
+  }, []);
 
-  /* =======================
-     PRESCRIPTION STATUS
-     (same logic as PrescriptionPageMedicines)
-  ======================= */
   const getPrescriptionStatus = (productId) => {
     const prescription = myPrescriptions.find(
-      (p) => p.medicine?._id === productId
+      (p) => p.medicine?._id === productId,
     );
     return prescription ? prescription.status : null;
   };
 
-  /* =======================
-     CARD CLICK HANDLER (NEW FEATURE)
-  ======================= */
   const handleCardClick = (item) => {
     if (item.prescriptionRequired) {
       const status = getPrescriptionStatus(item._id);
-
-      // 🔥 Pending or Approved → redirect to My Prescriptions
       if (status === "pending" || status === "approved") {
         navigate("/my-prescriptions");
         return;
       }
     }
 
-    // Default → product detail page
     navigate(`/products/${item._id}`);
   };
 
-  /* =======================
-     ADD TO CART
-  ======================= */
   const handleAddToCart = async (productId) => {
     try {
       setAdding(productId);
@@ -101,9 +77,7 @@ useEffect(() => {
       toast.success("Added to cart 🛒");
       incrementCart(1);
     } catch (error) {
-      toast.error(
-        error.response?.data?.message || "Failed to add to cart"
-      );
+      toast.error(error.response?.data?.message || "Failed to add to cart");
     } finally {
       setAdding(null);
     }
@@ -111,95 +85,97 @@ useEffect(() => {
 
   if (loading) {
     return (
-      <div className="py-20 text-center text-sky-700 font-semibold">
-        Loading featured medicines...
-      </div>
+      <section className="bg-linear-to-b from-sky-50 via-white to-sky-50 py-12 lg:py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-8 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <div className="h-8 w-40 animate-pulse rounded-full bg-slate-200" />
+              <div className="mt-2 h-4 w-56 animate-pulse rounded-full bg-slate-200" />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+            {Array.from({ length: 4 }).map((_, index) => (
+              <div
+                key={index}
+                className="h-80 animate-pulse rounded-3xl bg-slate-200"
+              />
+            ))}
+          </div>
+        </div>
+      </section>
     );
   }
 
   return (
-    <section className="bg-gradient-to-b from-sky-50 via-white to-sky-50 py-12 lg:py-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-
-        {/* Header */}
-        <div className="flex justify-between items-center mb-10">
+    <section className="bg-linear-to-b from-sky-50 via-white to-sky-50 py-12 lg:py-20">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mb-8 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h2 className="text-3xl font-bold text-sky-900">
+            <h2 className="text-2xl font-bold text-sky-900 sm:text-3xl">
               Featured Medicines
             </h2>
-            <p className="text-sky-600 text-sm mt-2">
+            <p className="mt-2 text-xs sm:text-sm text-slate-600">
               Top recommended health essentials
             </p>
           </div>
 
           <Link
             to="/products"
-            className="text-sm font-semibold text-sky-700 underline"
+            className="text-xs sm:text-sm font-semibold text-sky-700 transition hover:text-sky-900"
           >
             View all →
           </Link>
         </div>
 
-        {/* Scroll Container */}
-        <div className="relative">
-          <button
-            onClick={() =>
-              scrollRef.current?.scrollBy({ left: -300, behavior: "smooth" })
-            }
-            className="hidden sm:flex absolute left-2 top-1/2 -translate-y-1/2 bg-white shadow rounded-full w-10 h-10 items-center justify-center"
-          >
-            <MoveLeftIcon size={18} />
-          </button>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+          {products.map((item) => {
+            const status = item.prescriptionRequired
+              ? getPrescriptionStatus(item._id)
+              : null;
 
-          <div
-            ref={scrollRef}
-            className="flex gap-6 overflow-x-auto pb-6 no-scrollbar"
-          >
-            {products.map((item) => {
-              const status = item.prescriptionRequired
-                ? getPrescriptionStatus(item._id)
-                : null;
+            return (
+              <article
+                key={item._id}
+                onClick={() => handleCardClick(item)}
+                className="flex h-full cursor-pointer flex-col rounded-2xl border border-slate-100 bg-white p-3 sm:p-4 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-xl"
+              >
+                <div className="mb-4 flex items-center justify-center rounded-3xl bg-sky-50 p-4">
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="h-24 sm:h-28 lg:h-32 w-full object-contain"
+                    loading="lazy"
+                  />
+                </div>
 
-              return (
-                <div
-                  key={item._id}
-                  onClick={() => handleCardClick(item)}
-                  className="min-w-[260px] bg-white rounded-3xl border shadow-md p-5 hover:shadow-xl hover:-translate-y-2 transition cursor-pointer"
-                >
-                  {/* Image */}
-                  <div className="flex justify-center mb-4">
-                    <div className="w-32 h-32 bg-sky-50 rounded-3xl flex items-center justify-center">
-                      {/* <img
-                        src={`http://localhost:5001${item.image}`}
-                        alt={item.name}
-                        className="object-contain p-4"
-                      /> */}
-                      
-                        <img
-                        src={item.image}
-                        alt={item.name}
-                        className="object-contain p-4"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Name */}
-                  <h3 className="font-semibold text-sky-900 mb-1">
+                <div className="flex flex-1 flex-col">
+                  <h3 className="text-xs sm:text-sm sm:text-base font-semibold text-slate-900 line-clamp-2">
                     {item.name}
                   </h3>
-
-                  {/* Price */}
-                  <p className="text-xl font-bold mb-4">
-                    ₹{item.price}
+                  <p className="mt-2 text-xs sm:text-sm text-slate-600 line-clamp-2">
+                    {item.composition || item.genericName || item.manufacturer}
                   </p>
+                  <div className="mt-4 flex items-center justify-between">
+                    <p className="text-base sm:text-lg font-bold text-slate-900">
+                      ₹{item.price}
+                    </p>
+                    {item.stock > 0 ? (
+                      <span className="text-xs font-medium text-emerald-600">
+                        In stock
+                      </span>
+                    ) : (
+                      <span className="text-xs font-medium text-red-600">
+                        Out of stock
+                      </span>
+                    )}
+                  </div>
 
-                  {/* CTA LOGIC */}
                   {item.stock === 0 ? (
                     <button
                       disabled
-                      className="w-full bg-red-100 py-3 rounded-xl"
+                      className="mt-4 min-h-[44px] w-full rounded-2xl bg-red-100 px-3 py-2 text-xs sm:text-sm font-semibold text-red-700"
                     >
-                      ❌ Out of Stock
+                      Out of Stock
                     </button>
                   ) : !item.prescriptionRequired ? (
                     <button
@@ -207,10 +183,10 @@ useEffect(() => {
                         e.stopPropagation();
                         handleAddToCart(item._id);
                       }}
-                      className="w-full bg-sky-600 text-white py-3 rounded-xl"
+                      className="mt-4 flex min-h-[44px] w-full items-center justify-center gap-2 rounded-2xl bg-sky-600 px-3 py-2 text-xs sm:text-sm font-semibold text-white transition hover:bg-sky-700"
                     >
-                      <ShoppingCart size={16} className="inline mr-2" />
-                      Add to Cart
+                      <ShoppingCart size={16} />
+                      {adding === item._id ? "Adding..." : "Add to Cart"}
                     </button>
                   ) : !status ? (
                     <button
@@ -218,17 +194,17 @@ useEffect(() => {
                         e.stopPropagation();
                         navigate(`/upload-prescription?medicineId=${item._id}`);
                       }}
-                      className="w-full bg-emerald-600 text-white py-3 rounded-xl flex items-center justify-center gap-2"
+                      className="mt-4 flex min-h-[44px] w-full items-center justify-center gap-2 rounded-2xl bg-emerald-600 px-3 py-2 text-xs sm:text-sm font-semibold text-white transition hover:bg-emerald-700"
                     >
-                      <FileText size={18} />
+                      <FileText size={16} />
                       Upload Prescription
                     </button>
                   ) : status === "pending" ? (
                     <button
                       disabled
-                      className="w-full bg-amber-100 py-3 rounded-xl"
+                      className="mt-4 min-h-[44px] w-full rounded-2xl bg-amber-100 px-3 py-2 text-xs sm:text-sm font-semibold text-amber-800"
                     >
-                      ⏳ Pending Approval
+                      Pending Approval
                     </button>
                   ) : status === "rejected" ? (
                     <button
@@ -236,9 +212,9 @@ useEffect(() => {
                         e.stopPropagation();
                         navigate(`/upload-prescription?medicineId=${item._id}`);
                       }}
-                      className="w-full bg-red-600 text-white py-3 rounded-xl"
+                      className="mt-4 min-h-[44px] w-full rounded-2xl bg-red-600 px-3 py-2 text-xs sm:text-xs sm:text-sm font-semibold text-white transition hover:bg-red-700"
                     >
-                      ❌ Upload Again
+                      Upload Again
                     </button>
                   ) : (
                     <button
@@ -246,24 +222,15 @@ useEffect(() => {
                         e.stopPropagation();
                         navigate("/my-prescriptions");
                       }}
-                      className="w-full bg-emerald-100 text-emerald-700 py-3 rounded-xl"
+                      className="mt-4 min-h-[44px] w-full rounded-2xl bg-emerald-100 px-3 py-2 text-xs sm:text-xs sm:text-sm font-semibold text-emerald-700"
                     >
-                      ✅ Approved · View
+                      Approved · View
                     </button>
                   )}
                 </div>
-              );
-            })}
-          </div>
-
-          <button
-            onClick={() =>
-              scrollRef.current?.scrollBy({ left: 300, behavior: "smooth" })
-            }
-            className="hidden sm:flex absolute right-2 top-1/2 -translate-y-1/2 bg-white shadow rounded-full w-10 h-10 items-center justify-center"
-          >
-            <MoveRightIcon size={18} />
-          </button>
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>

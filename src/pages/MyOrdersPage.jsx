@@ -31,105 +31,118 @@ const MyOrdersPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-sky-50 px-4 py-10">
-      <div className="max-w-5xl mx-auto">
-        <h1 className="text-2xl sm:text-3xl font-bold text-sky-900 mb-8">
-          My Orders
-        </h1>
+    <div className="space-y-6">
+      {orders.map((order) => (
+        <div
+          key={order._id}
+          className="overflow-hidden rounded-3xl border border-sky-100 bg-white shadow-md transition hover:-translate-y-1 hover:shadow-xl"
+        >
+          {/* Header */}
+          <div className="flex flex-col gap-4 border-b border-slate-100 p-6 md:flex-row md:items-center md:justify-between">
+            <div className="flex items-center gap-4">
+              <div className="rounded-2xl bg-sky-100 p-3 text-sky-700">
+                <Package size={24} />
+              </div>
 
-        {orders.length === 0 ? (
-          <p className="text-sky-700">You have no orders yet.</p>
-        ) : (
-          <div className="space-y-6">
-            {orders.map((order) => (
-              <div
-                key={order._id}
-                className="bg-white rounded-2xl shadow-md p-6 hover:shadow-lg transition"
-              >
-                {/* Header */}
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-4">
-                    <div className="p-3 rounded-xl bg-sky-100 text-sky-700">
-                      <Package />
-                    </div>
-                    <div>
-                      <p className="font-semibold text-sky-900">
-                        Order #{order._id.slice(-6)}
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        {new Date(order.createdAt).toDateString()}
-                      </p>
-                    </div>
-                  </div>
+              <div>
+                <p className="text-lg font-bold text-sky-900">
+                  Order #{order._id.slice(-6).toUpperCase()}
+                </p>
 
-                  <span
-                    className={`text-xs font-semibold px-3 py-1 rounded-full ${
-                      order.status === "DELIVERED"
-                        ? "bg-green-100 text-green-700"
-                        : order.status === "CANCELLED"
-                        ? "bg-red-100 text-red-700"
-                        : "bg-yellow-100 text-yellow-700"
-                    }`}
-                  >
-                    {order.status}
-                  </span>
-                </div>
+                <p className="text-sm text-slate-500">
+                  {new Date(order.createdAt).toLocaleDateString("en-IN", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </p>
+              </div>
+            </div>
 
-                {/* Items Preview */}
-                <div className="mb-4">
-                  <p className="text-sm font-semibold text-gray-700 mb-2">
-                    Items ({order.items.length})
-                  </p>
+            <span
+              className={`rounded-full px-4 py-2 text-xs font-semibold ${
+                order.status === "DELIVERED"
+                  ? "bg-emerald-100 text-emerald-700"
+                  : order.status === "CANCELLED"
+                    ? "bg-red-100 text-red-700"
+                    : order.status === "SHIPPED"
+                      ? "bg-sky-100 text-sky-700"
+                      : "bg-amber-100 text-amber-700"
+              }`}
+            >
+              {order.status}
+            </span>
+          </div>
 
-                  <div className="flex gap-4 overflow-hidden">
-                    {order.items.slice(0, 2).map((item) => (
-                      <div
-                        key={item._id}
-                        className="flex items-center gap-3 bg-gray-50 rounded-xl p-3 flex-1"
-                      >
-                        <img
-                          src={item.image}
-                          alt={item.name}
-                          className="w-12 h-12 object-cover rounded-lg"
-                        />
-                        <div className="text-sm">
-                          <p className="font-medium text-gray-800">
-                            {item.name}
-                          </p>
-                          <p className="text-gray-500">
-                            ₹{item.price} × {item.quantity}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
+          {/* Products */}
+          <div className="space-y-4 p-6">
+            <h3 className="font-semibold text-slate-800">
+              Ordered Medicines ({order.items.length})
+            </h3>
 
-                    {order.items.length > 2 && (
-                      <div className="flex items-center justify-center text-sm text-gray-500">
-                        +{order.items.length - 2} more
-                      </div>
-                    )}
-                  </div>
-                </div>
+            <div className="space-y-3">
+              {order.items.map((item) => (
+                <div
+                  key={item._id}
+                  className="flex items-center gap-4 rounded-2xl bg-slate-50 p-3"
+                >
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="h-16 w-16 rounded-xl object-contain bg-white p-2"
+                  />
 
-                {/* Address + Total */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                  <div className="flex items-start gap-2 text-sm text-gray-600">
-                    <MapPin size={16} className="mt-0.5" />
-                    <p>
-                      {order.address.city}, {order.address.state} –{" "}
-                      {order.address.pincode}
+                  <div className="flex-1">
+                    <p className="font-semibold text-slate-900">{item.name}</p>
+
+                    <p className="text-sm text-slate-500">
+                      ₹{item.price} × {item.quantity}
                     </p>
                   </div>
 
-                  <p className="text-lg font-bold text-sky-900">
-                    Total: ₹{order.totalAmount}
+                  <p className="font-bold text-sky-900">
+                    ₹{item.price * item.quantity}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            {/* Footer */}
+            <div className="mt-6 flex flex-col gap-5 border-t border-slate-100 pt-5 md:flex-row md:items-center md:justify-between">
+              <div className="flex items-start gap-3">
+                <MapPin size={18} className="mt-1 text-emerald-600" />
+
+                <div>
+                  <p className="font-semibold text-slate-800">
+                    Delivery Address
+                  </p>
+
+                  <p className="text-sm text-slate-600">
+                    {order.address.fullName}
+                  </p>
+
+                  <p className="text-sm text-slate-500">
+                    {order.address.addressLine}, {order.address.city},{" "}
+                    {order.address.state} - {order.address.pincode}
+                  </p>
+
+                  <p className="text-sm text-slate-500">
+                    {order.address.phone}
                   </p>
                 </div>
               </div>
-            ))}
+
+              <div className="text-right">
+                <p className="text-sm text-slate-500">Total Amount</p>
+
+                <p className="text-2xl font-bold text-emerald-600">
+                  ₹{order.totalAmount}
+                </p>
+              </div>
+            </div>
           </div>
-        )}
-      </div>
+        </div>
+      ))}
     </div>
   );
 };

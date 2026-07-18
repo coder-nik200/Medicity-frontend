@@ -23,9 +23,9 @@ const AboutPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-sky-50 py-10 px-4">
-      <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-md border border-sky-100 p-8 space-y-6">
-        <h1 className="text-3xl font-extrabold text-sky-900 mb-2">
+    <div className="min-h-screen bg-sky-50 py-6 px-4 sm:py-10">
+      <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-md border border-sky-100 p-5 space-y-6 sm:p-8">
+        <h1 className="text-2xl font-extrabold text-sky-900 mb-2 sm:text-3xl">
           About Medicity
         </h1>
         <p className="text-sm text-sky-800">
@@ -35,7 +35,7 @@ const AboutPage = () => {
           you can focus on your health while we take care of everything else.
         </p>
 
-        <h2 className="text-xl font-semibold text-sky-900 mt-6 mb-4">
+        <h2 className="text-lg font-semibold text-sky-900 mt-6 mb-4 sm:text-xl">
           What we stand for
         </h2>
         <ul className="space-y-3">
@@ -44,16 +44,16 @@ const AboutPage = () => {
             return (
               <li
                 key={idx}
-                className="flex items-center gap-2 text-sm text-sky-800"
+                className="flex items-start gap-2 text-sm text-sky-800"
               >
-                <Icon className="text-emerald-600 w-5 h-5 flex-shrink-0" />
-                {f.text}
+                <Icon className="text-emerald-600 w-5 h-5 flex-shrink-0 mt-0.5" />
+                <span>{f.text}</span>
               </li>
             );
           })}
         </ul>
 
-        <h2 className="text-xl font-semibold text-sky-900 mt-6 mb-3">
+        <h2 className="text-lg font-semibold text-sky-900 mt-6 mb-3 sm:text-xl">
           Why customers trust us
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-sky-800">
@@ -75,7 +75,7 @@ const AboutPage = () => {
         <div className="mt-6 text-center">
           <Link
             to="/products"
-            className="inline-block bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-xl font-semibold shadow-md transition"
+            className="inline-block w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-xl font-semibold shadow-md transition"
           >
             Shop Medicines
           </Link>

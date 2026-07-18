@@ -65,9 +65,7 @@ const AddressPage = () => {
       setShowForm(false);
       fetchAddresses();
     } catch (error) {
-      toast.error(
-        error.response?.data?.message || "Failed to add address"
-      );
+      toast.error(error.response?.data?.message || "Failed to add address");
     }
   };
 
@@ -85,19 +83,18 @@ const AddressPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-sky-50 px-4 py-10">
+    <div className="min-h-screen bg-sky-50 px-4 py-6 sm:py-10">
       <div className="max-w-5xl mx-auto">
-
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
-          <h1 className="text-2xl font-bold text-sky-900">
+          <h1 className="text-xl sm:text-2xl font-bold text-sky-900">
             Delivery Addresses
           </h1>
 
           <button
             onClick={() => setShowForm(true)}
             disabled={addresses.length >= MAX_ADDRESSES}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl font-semibold transition
+            className={`flex items-center justify-center gap-2 px-4 py-2 rounded-xl font-semibold transition
               ${
                 addresses.length >= MAX_ADDRESSES
                   ? "bg-gray-300 text-gray-500 cursor-not-allowed"
@@ -118,24 +115,20 @@ const AddressPage = () => {
 
         {/* Loading */}
         {loading && (
-          <p className="text-center text-sky-700">
-            Loading addresses...
-          </p>
+          <p className="text-center text-sky-700">Loading addresses...</p>
         )}
 
         {/* Empty State */}
         {!loading && addresses.length === 0 && (
-          <p className="text-center text-sky-700">
-            No addresses added yet.
-          </p>
+          <p className="text-center text-sky-700">No addresses added yet.</p>
         )}
 
         {/* Address Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           {addresses.map((addr) => (
             <div
               key={addr._id}
-              className="bg-white rounded-2xl p-6 shadow-md border border-sky-100 relative"
+              className="bg-white rounded-2xl p-5 sm:p-6 shadow-md border border-sky-100 relative"
             >
               <button
                 onClick={() => handleDelete(addr._id)}
@@ -144,14 +137,14 @@ const AddressPage = () => {
                 <Trash2 size={18} />
               </button>
 
-              <div className="flex items-center gap-2 mb-2">
-                <MapPin className="text-sky-600" />
-                <p className="font-semibold text-sky-900">
+              <div className="flex items-center gap-2 mb-2 pr-8">
+                <MapPin className="text-sky-600 flex-shrink-0" />
+                <p className="font-semibold text-sky-900 break-words min-w-0">
                   {addr.fullName}
                 </p>
               </div>
 
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 break-words">
                 {addr.addressLine}, {addr.city}, {addr.state} - {addr.pincode}
               </p>
 
@@ -166,14 +159,18 @@ const AddressPage = () => {
 
         {/* Add Address Form */}
         {showForm && (
-          <div className="mt-10 bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-sky-100">
+          <div className="mt-10 bg-white rounded-3xl p-5 sm:p-8 shadow-xl border border-sky-100">
             <h2 className="text-lg font-semibold text-sky-900 mb-6">
               Add New Address
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {[
-                { label: "Full Name", key: "fullName", placeholder: "John Doe" },
+                {
+                  label: "Full Name",
+                  key: "fullName",
+                  placeholder: "John Doe",
+                },
                 { label: "Phone", key: "phone", placeholder: "9876543210" },
                 { label: "City", key: "city", placeholder: "Mumbai" },
                 { label: "State", key: "state", placeholder: "Maharashtra" },
