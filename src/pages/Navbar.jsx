@@ -10,6 +10,7 @@ import {
   LayoutDashboard,
   MapPin,
   LogOut,
+  Heart,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import api from "../api/axios";
@@ -29,7 +30,6 @@ const Navbar = () => {
     fetchCartCount();
   }, [user]);
 
-  /* ---------------- ACTIONS ---------------- */
   const goToProducts = () => {
     navigate("/products");
     setMobileOpen(false);
@@ -47,7 +47,6 @@ const Navbar = () => {
     }
   };
 
-  /* ---------------- CLOSE DROPDOWN ON OUTSIDE CLICK ---------------- */
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -58,37 +57,36 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Lock body scroll while the mobile drawer is open
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileOpen]);
+
   return (
-    <nav className="sticky top-0 z-50 bg-gradient-to-r from-sky-700 to-blue-800 text-white shadow-lg">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
-        {/* Logo */}
+    <nav className="sticky top-0 z-50 border-b border-sky-100 bg-linear-to-r from-sky-700 via-sky-700 to-blue-800 text-white shadow-[0_10px_30px_rgba(2,132,199,0.16)]">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-3 py-3 sm:px-6 lg:px-8">
         <Link
           to="/"
           onClick={() => setMobileOpen(false)}
-          className="text-2xl font-bold flex items-center gap-2"
+          className="flex items-center gap-2 text-lg font-semibold sm:text-xl"
         >
-          <span className="text-3xl">💊</span>
-          Medicity
+          <span className="rounded-full bg-white/15 p-2 text-xl">💊</span>
+          <span className="tracking-tight">Medicity</span>
         </Link>
 
-        {/* ---------------- DESKTOP MENU ---------------- */}
-        <div className="hidden md:flex items-center gap-8">
-          <Link to="/" className="hover:text-blue-200">
-            Home
-          </Link>
-          <Link to="/products" className="hover:text-blue-200">
-            Medicines
-          </Link>
-          <Link to="/categories" className="hover:text-blue-200">
-            Categories
-          </Link>
-          <Link to="/about" className="hover:text-blue-200">
-            About
-          </Link>
+        <div className="hidden items-center gap-2 md:flex">
+          <NavLink to="/" label="Home" />
+          <NavLink to="/products" label="Medicines" />
+          <NavLink to="/categories" label="Categories" />
+          <NavLink to="/about" label="About" />
+          <NavLink to="/contact" label="Contact" />
 
           <button
             onClick={goToProducts}
-            className="flex items-center gap-2 bg-white text-sky-700 px-4 py-2 rounded-xl font-semibold hover:bg-sky-100"
+            className="flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-sky-700 transition hover:bg-sky-50"
           >
             <Search size={16} />
             Search
@@ -96,30 +94,29 @@ const Navbar = () => {
 
           <Link
             to="/cart"
-            className="relative flex items-center gap-2 bg-white text-blue-700 px-4 py-2 rounded-xl font-semibold"
+            className="relative flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-sky-700 transition hover:bg-sky-50"
           >
             <ShoppingCart size={18} />
             Cart
             {cartCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-semibold text-white">
                 {cartCount}
               </span>
             )}
           </Link>
 
-          {/* PROFILE */}
           {user ? (
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setProfileOpen((p) => !p)}
-                className="flex items-center gap-2 bg-white text-sky-700 px-4 py-2 rounded-xl font-semibold"
+                className="flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-sky-700 transition hover:bg-sky-50"
               >
                 <User size={18} />
                 {user.name}
               </button>
 
               {profileOpen && (
-                <div className="absolute right-0 mt-3 w-60 bg-white text-gray-800 rounded-2xl shadow-xl overflow-hidden">
+                <div className="absolute right-0 mt-3 w-60 overflow-hidden rounded-2xl bg-white text-slate-800 shadow-2xl">
                   <DropdownLink
                     to="/account/dashboard"
                     icon={<LayoutDashboard size={16} />}
@@ -151,7 +148,7 @@ const Navbar = () => {
 
                   <button
                     onClick={handleLogout}
-                    className="w-full text-left flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50"
+                    className="flex w-full items-center gap-3 px-4 py-3 text-left text-red-600 transition hover:bg-red-50"
                   >
                     <LogOut size={16} />
                     Logout
@@ -161,10 +158,15 @@ const Navbar = () => {
             </div>
           ) : (
             <>
-              <Link to="/login">Login</Link>
+              <Link
+                to="/login"
+                className="text-sm font-medium text-sky-50 transition hover:text-white"
+              >
+                Login
+              </Link>
               <Link
                 to="/signup"
-                className="bg-white text-blue-700 px-4 py-2 rounded-xl font-semibold"
+                className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-sky-700 transition hover:bg-sky-50"
               >
                 Register
               </Link>
@@ -172,18 +174,59 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* MOBILE TOGGLE */}
-        <button
-          className="md:hidden"
-          onClick={() => setMobileOpen(!mobileOpen)}
-        >
-          {mobileOpen ? <X size={28} /> : <Menu size={28} />}
-        </button>
+        <div className="flex items-center gap-2 md:hidden">
+          <Link
+            to="/cart"
+            className="relative flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white"
+          >
+            <ShoppingCart size={18} />
+            {cartCount > 0 && (
+              <span className="absolute right-0 top-0 flex h-[18px] w-[18px] items-center justify-center rounded-full bg-red-500 text-[10px] font-semibold text-white">
+                {cartCount}
+              </span>
+            )}
+          </Link>
+          <button
+            onClick={() => setMobileOpen((prev) => !prev)}
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white"
+            aria-label="Toggle menu"
+          >
+            {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
       </div>
 
-      {/* ---------------- MOBILE MENU ---------------- */}
       {mobileOpen && (
-        <div className="md:hidden bg-blue-900 px-4 py-6 space-y-3">
+        <div
+          className="fixed inset-0 z-[60] bg-slate-950/40 md:hidden"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
+
+      <div
+        className={`fixed right-0 top-0 z-[70] h-full w-[84vw] max-w-[320px] bg-white text-slate-900 shadow-2xl transition-transform duration-300 md:hidden ${mobileOpen ? "translate-x-0" : "translate-x-full"}`}
+      >
+        <div className="flex items-center justify-between border-b border-slate-200 px-4 py-4">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-sky-600">
+              Quick access
+            </p>
+            <p className="text-sm font-semibold text-slate-900">
+              Medicity Menu
+            </p>
+          </div>
+          <button
+            onClick={() => setMobileOpen(false)}
+            className="rounded-full p-2 text-slate-600 hover:bg-slate-100"
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        <div
+          className="space-y-1 overflow-y-auto px-3 py-3"
+          style={{ maxHeight: "calc(100% - 73px)" }}
+        >
           <MobileLink to="/" label="Home" setMobileOpen={setMobileOpen} />
           <MobileLink
             to="/products"
@@ -196,30 +239,22 @@ const Navbar = () => {
             setMobileOpen={setMobileOpen}
           />
           <MobileLink to="/about" label="About" setMobileOpen={setMobileOpen} />
+
+          <MobileLink
+            to="/contact"
+            label="Contact"
+            setMobileOpen={setMobileOpen}
+          />
+
           <MobileLink
             to="/cart"
             label={`Cart (${cartCount})`}
             setMobileOpen={setMobileOpen}
           />
-          {!user && (
-            <>
-              <MobileLink
-                to="/login"
-                label="Login"
-                setMobileOpen={setMobileOpen}
-              />
-              <MobileLink
-                to="/register"
-                label="Register"
-                setMobileOpen={setMobileOpen}
-              />
-            </>
-          )}
 
-          {/* NOT LOGGED IN */}
-          {!user && (
+          {!user ? (
             <>
-              <div className="border-t border-blue-700 my-2" />
+              <div className="my-2 border-t border-slate-200" />
               <MobileLink
                 to="/login"
                 label="Login"
@@ -231,12 +266,9 @@ const Navbar = () => {
                 setMobileOpen={setMobileOpen}
               />
             </>
-          )}
-
-          {/* LOGGED IN */}
-          {user && (
+          ) : (
             <>
-              <div className="border-t border-blue-700 my-2" />
+              <div className="my-2 border-t border-slate-200" />
               <MobileLink
                 to="/account/dashboard"
                 label="Dashboard"
@@ -257,7 +289,6 @@ const Navbar = () => {
                 label="My Orders"
                 setMobileOpen={setMobileOpen}
               />
-
               {user.role === "admin" && (
                 <MobileLink
                   to="/admin"
@@ -265,25 +296,35 @@ const Navbar = () => {
                   setMobileOpen={setMobileOpen}
                 />
               )}
-
               <button
                 onClick={handleLogout}
-                className="w-full text-left px-4 py-3 rounded-xl text-red-300 hover:bg-red-900/30"
+                className="mt-2 flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-red-600 transition hover:bg-red-50"
               >
+                <LogOut size={16} />
                 Logout
               </button>
             </>
           )}
         </div>
-      )}
+      </div>
     </nav>
   );
 };
 
-/* ---------------- REUSABLE COMPONENTS ---------------- */
+const NavLink = ({ to, label }) => (
+  <Link
+    to={to}
+    className="rounded-full px-3 py-2 text-sm font-medium text-sky-50 transition hover:bg-white/10 hover:text-white"
+  >
+    {label}
+  </Link>
+);
 
 const DropdownLink = ({ to, icon, label }) => (
-  <Link to={to} className="flex items-center gap-3 px-4 py-3 hover:bg-gray-100">
+  <Link
+    to={to}
+    className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+  >
     {icon}
     {label}
   </Link>
@@ -293,7 +334,7 @@ const MobileLink = ({ to, label, setMobileOpen }) => (
   <Link
     to={to}
     onClick={() => setMobileOpen(false)}
-    className="block px-4 py-3 rounded-xl text-white hover:bg-blue-800"
+    className="flex items-center rounded-2xl px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
   >
     {label}
   </Link>

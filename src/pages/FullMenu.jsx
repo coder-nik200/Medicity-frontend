@@ -71,7 +71,7 @@ const FullMenu = () => {
           Full Menu
         </h1>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 sm:gap-5 lg:gap-6">
           {products.length === 0 ? (
             <p className="text-center col-span-full text-sky-700">
               No medicines found.
@@ -81,34 +81,35 @@ const FullMenu = () => {
               <div
                 key={product._id}
                 onClick={() => handleNavigate(product._id)}
-                className="bg-white rounded-3xl shadow-lg border border-sky-100 p-5 hover:shadow-2xl hover:-translate-y-2 transition-transform duration-500 cursor-pointer flex flex-col"
+                className="flex h-full cursor-pointer flex-col rounded-2xl border border-sky-100 bg-white p-3 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl sm:p-5"
               >
                 {/* Badge */}
-                <span className="inline-block mb-3 text-[10px] sm:text-xs font-semibold px-3 py-1.5 rounded-full bg-gradient-to-r from-emerald-400 to-sky-500 text-white shadow-sm">
+                <span className="mb-3 inline-block rounded-full bg-linear-to-r from-emerald-400 to-sky-500 px-2 py-1 text-[10px] font-semibold text-white shadow-sm sm:px-3 sm:py-1.5 sm:text-xs">
                   {product.category || "General"}
                 </span>
 
                 {/* Image */}
-                <div className="mb-4 w-full aspect-[4/3] overflow-hidden rounded-2xl bg-gray-100 flex items-center justify-center">
+                <div className="mb-3 flex h-28 sm:h-36 lg:h-44 items-center justify-center overflow-hidden rounded-2xl bg-slate-50">
                   <img
                     src={product.image}
                     alt={product.name}
-                    className="w-full h-full object-contain p-3 transition-transform duration-500 hover:scale-105"
-                    onError={(e) =>
-                      (e.target.src =
-                        "https://via.placeholder.com/400x300?text=No+Image")
-                    }
+                    className="h-full w-full object-contain p-2 transition duration-300 hover:scale-105"
+                    loading="lazy"
+                    onError={(e) => {
+                      e.target.src =
+                        "https://via.placeholder.com/400x300?text=No+Image";
+                    }}
                   />
                 </div>
 
                 {/* Name */}
-                <h2 className="font-semibold text-sky-900 mb-2 text-sm sm:text-base lg:text-lg line-clamp-2">
+                <h2 className="line-clamp-2 text-sm font-semibold text-sky-900 sm:text-base">
                   {product.name}
                 </h2>
 
                 {/* Price + Rating */}
                 <div className="flex items-center justify-between mb-4">
-                  <p className="text-lg font-bold text-sky-900">
+                  <p className="text-base font-bold text-sky-900 sm:text-lg">
                     ₹{product.price?.toFixed(2) || "0.00"}
                   </p>
                   <div className="flex items-center gap-1">
@@ -123,10 +124,10 @@ const FullMenu = () => {
                 <button
                   onClick={(e) => handleAddToCart(e, product._id)}
                   disabled={addingId === product._id}
-                  className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold shadow-md transition-all duration-300 ${
+                  className={`mt-auto flex h-11 w-full items-center justify-center gap-2 rounded-xl text-xs font-semibold shadow-md transition-all duration-300 sm:text-sm ${
                     addingId === product._id
-                      ? "bg-gray-400 cursor-not-allowed"
-                      : "bg-gradient-to-r from-sky-600 to-sky-500 text-white hover:from-sky-700 hover:to-sky-600"
+                      ? "cursor-not-allowed bg-gray-400"
+                      : "bg-linear-to-r from-sky-600 to-sky-500 text-white hover:from-sky-700 hover:to-sky-600"
                   }`}
                 >
                   <ShoppingCart size={16} />

@@ -52,11 +52,11 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-sky-50 to-emerald-50 px-4">
-      <div className="bg-white shadow-xl rounded-3xl p-10 w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-b from-sky-50 to-emerald-50 px-4 py-8">
+      <div className="bg-white shadow-xl rounded-3xl p-6 w-full max-w-md sm:p-10">
         <div className="flex flex-col items-center mb-6">
           <span className="text-4xl mb-2">💊</span>
-          <h2 className="text-3xl font-extrabold text-sky-900 text-center">
+          <h2 className="text-2xl font-extrabold text-sky-900 text-center sm:text-3xl">
             Login to Medicity
           </h2>
           <p className="text-sm text-sky-700 mt-1 text-center">

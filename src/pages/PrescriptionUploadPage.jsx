@@ -33,14 +33,12 @@ const PrescriptionUploadPage = () => {
         const presRes = await api.get("/prescriptions/my");
 
         const hasPending = presRes.data.data.some(
-          (p) =>
-            p.medicine?._id === medicineId &&
-            p.status === "pending"
+          (p) => p.medicine?._id === medicineId && p.status === "pending",
         );
 
         if (hasPending) {
           toast.error(
-            "You already have a pending prescription for this medicine"
+            "You already have a pending prescription for this medicine",
           );
           navigate("/my-prescriptions");
           return;
@@ -91,7 +89,7 @@ const PrescriptionUploadPage = () => {
       await api.post("/prescriptions", formData);
 
       toast.success(
-        "Prescription uploaded successfully. Waiting for approval."
+        "Prescription uploaded successfully. Waiting for approval.",
       );
 
       setFile(null);
@@ -99,8 +97,7 @@ const PrescriptionUploadPage = () => {
       navigate("/my-prescriptions");
     } catch (error) {
       toast.error(
-        error?.response?.data?.message ||
-          "Failed to upload prescription"
+        error?.response?.data?.message || "Failed to upload prescription",
       );
     } finally {
       setUploading(false);
@@ -118,91 +115,119 @@ const PrescriptionUploadPage = () => {
 
   /* ================= UI ================= */
   return (
-    <div className="min-h-screen bg-sky-50 flex items-center justify-center py-10 px-4">
-      <div className="bg-white rounded-2xl shadow-lg border border-sky-100 max-w-xl w-full p-8">
-        {/* Medicine Info */}
-        {medicine && (
-          <div className="mb-5 p-4 rounded-xl bg-emerald-50 border border-emerald-200">
-            <div className="flex items-center gap-3">
-              <Pill className="text-emerald-700" size={20} />
-              <div>
-                <p className="text-sm text-emerald-700 font-semibold">
-                  Prescription for:
-                </p>
-                <p className="font-bold text-sky-900">
-                  {medicine.name}
-                </p>
-                <p className="text-sm text-sky-700">
-                  Price: ₹{medicine.price}
-                </p>
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-emerald-50 py-6 sm:py-10 px-4">
+      <div className="mx-auto w-full max-w-2xl">
+        <div className="rounded-3xl border border-sky-100 bg-white shadow-xl p-5 sm:p-8">
+          {/* Medicine Info */}
+          {medicine && (
+            <div className="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-emerald-100">
+                  <Pill className="text-emerald-700" size={22} />
+                </div>
+
+                <div className="min-w-0">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">
+                    Prescription For
+                  </p>
+
+                  <h2 className="truncate text-base sm:text-lg font-bold text-sky-900">
+                    {medicine.name}
+                  </h2>
+
+                  <p className="mt-1 text-sm text-sky-700">
+                    Price: ₹{medicine.price}
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Header */}
-        <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 rounded-2xl bg-sky-100 flex items-center justify-center">
-            <FileText className="text-sky-700" size={22} />
+          {/* Header */}
+          <div className="mb-6 flex items-start gap-4">
+            <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-sky-100">
+              <FileText className="text-sky-700" size={24} />
+            </div>
+
+            <div>
+              <h1 className="text-xl sm:text-2xl font-bold text-sky-900">
+                Upload Prescription
+              </h1>
+
+              <p className="mt-1 text-sm leading-6 text-slate-600">
+                Upload a valid prescription. Our licensed pharmacists will
+                verify it before approving your order.
+              </p>
+            </div>
           </div>
-          <div>
-            <h1 className="text-2xl font-bold text-sky-900">
-              Upload Prescription
-            </h1>
-            <p className="text-sky-700 text-sm">
-              Our pharmacists will verify your prescription before processing
-              your order.
-            </p>
-          </div>
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Upload Area */}
+            <div className="rounded-2xl border-2 border-dashed border-sky-200 bg-sky-50 p-5 sm:p-8 transition hover:border-sky-400">
+              <input
+                id="prescription"
+                type="file"
+                accept="image/*,application/pdf"
+                className="hidden"
+                onChange={handleFileChange}
+              />
+
+              <label
+                htmlFor="prescription"
+                className="flex cursor-pointer flex-col items-center text-center"
+              >
+                <div className="mb-4 rounded-full bg-sky-100 p-4">
+                  <UploadCloud className="text-sky-600" size={34} />
+                </div>
+
+                <p className="break-all text-sm sm:text-base font-semibold text-sky-900">
+                  {file ? file.name : "Click to upload prescription"}
+                </p>
+
+                <p className="mt-2 text-xs sm:text-sm text-slate-500">
+                  JPG, PNG or PDF
+                  <br />
+                  Maximum file size 5MB
+                </p>
+              </label>
+            </div>
+
+            {/* Notes */}
+            <div>
+              <label className="mb-2 block text-sm font-semibold text-slate-800">
+                Notes for Pharmacist (Optional)
+              </label>
+
+              <textarea
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="Mention preferred brand, dosage instructions or delivery notes..."
+                className="min-h-[120px] w-full resize-none rounded-2xl border border-slate-200 px-4 py-3 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200"
+              />
+            </div>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={!file || uploading}
+              className="flex min-h-[50px] w-full items-center justify-center gap-2 rounded-2xl bg-emerald-600 px-4 text-sm sm:text-base font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-slate-300"
+            >
+              {uploading && <Loader2 size={18} className="animate-spin" />}
+
+              {uploading ? "Uploading..." : "Submit Prescription"}
+            </button>
+
+            {/* Footer */}
+            <div className="rounded-xl bg-sky-50 p-3">
+              <p className="text-center text-xs leading-5 text-slate-500">
+                By uploading this prescription, you confirm that it has been
+                issued by a registered medical practitioner and is valid under
+                applicable regulations.
+              </p>
+            </div>
+          </form>
         </div>
-
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-5 mt-4">
-          <div className="border-2 border-dashed border-sky-200 rounded-2xl bg-sky-50/60 p-6 text-center cursor-pointer hover:border-sky-400 transition">
-            <input
-              id="prescription"
-              type="file"
-              accept="image/*,application/pdf"
-              className="hidden"
-              onChange={handleFileChange}
-            />
-            <label htmlFor="prescription" className="block">
-              <UploadCloud className="mx-auto text-sky-600 mb-3" size={32} />
-              <p className="text-sky-900 font-semibold">
-                {file ? file.name : "Click to upload or drag & drop"}
-              </p>
-              <p className="text-xs text-sky-600 mt-1">
-                Accepted formats: JPG, PNG, PDF (Max 5MB)
-              </p>
-            </label>
-          </div>
-
-          <div>
-            <label className="block mb-1 text-sm font-medium text-sky-900">
-              Notes for Pharmacist (optional)
-            </label>
-            <textarea
-              className="w-full min-h-[90px] px-4 py-2 border rounded-xl focus:ring-2 focus:ring-sky-400 outline-none text-sm"
-              placeholder="Mention preferred brand, dosage instructions or delivery notes."
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={!file || uploading}
-            className="w-full flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl text-sm font-semibold shadow-sm transition disabled:bg-gray-300"
-          >
-            {uploading && <Loader2 className="animate-spin" size={18} />}
-            {uploading ? "Uploading..." : "Submit Prescription"}
-          </button>
-
-          <p className="text-[11px] text-sky-600 mt-2">
-            By uploading, you confirm that this prescription is issued by a
-            registered medical practitioner and is valid.
-          </p>
-        </form>
       </div>
     </div>
   );
